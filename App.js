@@ -1,21 +1,48 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { StyleSheet, Text, View, FlatList,Dimensions,ScrollView,Image } from "react-native";
+
+import news_data from "./src/news_data.json";
+import NewsCard from "./components/NewsCard";
+import news_banner_data from "./src/news_banner_data.json"
 
 export default function App() {
+
+  const renderNews = ({item}) => <NewsCard news={item} />;
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <Text style={styles.headerText}>News</Text>
+      <FlatList
+        ListHeaderComponent={() => (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {news_banner_data.map(bannerNews => (
+              <Image
+                style={styles.banner_image}
+                source={{uri: bannerNews.imageUrl}}
+              />
+            ))}
+          </ScrollView>
+        )}
+        keyExtractor={item => item.u_id.toString()}
+        data={news_data}
+        renderItem={renderNews}
+      />
     </View>
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#eceff1",
+  },
+  banner_image: {
+    height: Dimensions.get("window").height / 5,
+    width: Dimensions.get("window").width / 2,
+  },
+  headerText: {
+    fontWeight: "bold",
+    fontSize: 50,
   },
 });
